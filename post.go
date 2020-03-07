@@ -22,6 +22,8 @@ func addUser(res http.ResponseWriter, req *http.Request) {
 	}
 
 	if idx == len(data) {
+		highestID++
+		newUser.UserID = highestID
 		data = append(data, newUser)
 		res.WriteHeader(201)
 	} else {

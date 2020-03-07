@@ -17,8 +17,7 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 	case "POST":
 		addUser(res, req)
 	case "PATCH":
-		res.WriteHeader(200)
-		fmt.Fprintf(res, "PATCH request - update user")
+		updateUser(res, req)
 	case "DELETE":
 		res.WriteHeader(200)
 		fmt.Fprintf(res, "DELETE request - delete user")
@@ -29,7 +28,7 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("handler started on port 8081")
+	fmt.Println("api started on port 8081")
 
 	http.HandleFunc("/api", apiHandler)
 	http.ListenAndServe(":8081", nil)

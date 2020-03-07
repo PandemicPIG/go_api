@@ -1,25 +1,32 @@
 package main
 
+var highestID = 5
+
 var data = []user{
 	user{
-		Name:  "billy",
-		Email: "billy@email.com",
+		UserID: 1,
+		Name:   "billy",
+		Email:  "billy@email.com",
 	},
 	user{
-		Name:  "james",
-		Email: "james@email.com",
+		UserID: 2,
+		Name:   "james",
+		Email:  "james@email.com",
 	},
 	user{
-		Name:  "david",
-		Email: "david@email.com",
+		UserID: 3,
+		Name:   "david",
+		Email:  "david@email.com",
 	},
 	user{
-		Name:  "john",
-		Email: "john@email.com",
+		UserID: 5,
+		Name:   "john",
+		Email:  "john@email.com",
 	},
 }
 
 type user struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	UserID int    `json:"userId,string"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
 }
