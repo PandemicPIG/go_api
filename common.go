@@ -2,8 +2,8 @@ package main
 
 var data = []user{
 	user{
-		Name:  "john",
-		Email: "john@email.com",
+		Name:  "billy",
+		Email: "billy@email.com",
 	},
 	user{
 		Name:  "james",
@@ -12,6 +12,10 @@ var data = []user{
 	user{
 		Name:  "david",
 		Email: "david@email.com",
+	},
+	user{
+		Name:  "john",
+		Email: "john@email.com",
 	},
 }
 
