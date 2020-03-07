@@ -7,10 +7,12 @@ import (
 )
 
 func addUser(res http.ResponseWriter, req *http.Request) {
-	var data user
-	json.NewDecoder(req.Body).Decode(&data)
+	var newUser user
+	json.NewDecoder(req.Body).Decode(&newUser)
 
-	fmt.Println(data)
+	data = append(data, newUser)
+
+	fmt.Println(newUser)
 
 	res.WriteHeader(201)
 }
