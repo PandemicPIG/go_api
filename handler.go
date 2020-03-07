@@ -5,25 +5,33 @@ import (
 	"net/http"
 )
 
-func api(res http.ResponseWriter, req *http.Request) {
+func apiHandler(res http.ResponseWriter, req *http.Request) {
 	if req.URL.Path != "/api" {
-		http.Error(res, "Not found.", 404)
+		http.Error(res, "Forbidden", 403)
 		return
 	}
 
 	switch req.Method {
 	case "GET":
-		fmt.Fprintf(res, "GET request")
+		getUsers(res, req)
 	case "POST":
-		fmt.Fprintf(res, "POST request")
+		res.WriteHeader(200)
+		fmt.Fprintf(res, "POST request - create new user")
+	case "PATCH":
+		res.WriteHeader(200)
+		fmt.Fprintf(res, "PATCH request - update user")
+	case "DELETE":
+		res.WriteHeader(200)
+		fmt.Fprintf(res, "DELETE request - delete user")
 	default:
-		fmt.Fprintf(res, "Other method")
+		res.WriteHeader(405)
+		fmt.Fprintf(res, "Method Not Allowed")
 	}
 }
 
 func main() {
 	fmt.Println("handler started on port 8081")
 
-	http.HandleFunc("/api", api)
+	http.HandleFunc("/api", apiHandler)
 	http.ListenAndServe(":8081", nil)
 }
