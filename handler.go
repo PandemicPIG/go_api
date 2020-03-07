@@ -15,8 +15,7 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 	case "GET":
 		getUsers(res, req)
 	case "POST":
-		res.WriteHeader(200)
-		fmt.Fprintf(res, "POST request - create new user")
+		addUser(res, req)
 	case "PATCH":
 		res.WriteHeader(200)
 		fmt.Fprintf(res, "PATCH request - update user")
