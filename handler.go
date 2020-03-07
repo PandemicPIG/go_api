@@ -19,11 +19,9 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 	case "PATCH":
 		updateUser(res, req)
 	case "DELETE":
-		res.WriteHeader(200)
-		fmt.Fprintf(res, "DELETE request - delete user")
+		deleteUser(res, req)
 	default:
 		res.WriteHeader(405)
-		fmt.Fprintf(res, "Method Not Allowed")
 	}
 }
 
