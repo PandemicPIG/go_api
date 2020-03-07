@@ -2,15 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
 func updateUser(res http.ResponseWriter, req *http.Request) {
 	var updatedUser user
 	json.NewDecoder(req.Body).Decode(&updatedUser)
-
-	fmt.Println(updatedUser)
 
 	// check if user exists
 	var idx = -1

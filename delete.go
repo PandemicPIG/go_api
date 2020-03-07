@@ -2,15 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
 func deleteUser(res http.ResponseWriter, req *http.Request) {
 	var deletedUser user
 	json.NewDecoder(req.Body).Decode(&deletedUser)
-
-	fmt.Println(deletedUser)
 
 	// check if user exists
 	var idx = -1
