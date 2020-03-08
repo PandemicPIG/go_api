@@ -11,6 +11,8 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+
 	switch req.Method {
 	case "GET":
 		getUsers(res, req)
@@ -20,6 +22,12 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 		updateUser(res, req)
 	case "DELETE":
 		deleteUser(res, req)
+	case "OPTIONS":
+		res.Header().Add("Connection", "keep-alive")
+		res.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS, GET, DELETE, PATCH")
+		res.Header().Add("Access-Control-Allow-Headers", "content-type")
+		res.Header().Add("Access-Control-Max-Age", "86400")
+		res.WriteHeader(200)
 	default:
 		res.WriteHeader(405)
 	}
