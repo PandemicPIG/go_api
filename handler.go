@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -12,6 +12,7 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	switch req.Method {
 	case "GET":
@@ -34,8 +35,9 @@ func apiHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("api started on port 8081")
+	port := ":8081"
+	log.Printf("INFO: api started on port %s", port)
 
 	http.HandleFunc("/api", apiHandler)
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(port, nil)
 }

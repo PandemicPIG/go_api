@@ -2,16 +2,23 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 func getUsers(res http.ResponseWriter, req *http.Request) {
+	data := dataS.GetUserList()
+
 	if len(data) > 0 {
-		js, _ := json.Marshal(data)
-		res.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		users := []user{}
+		for _, val := range data {
+			users = append(users, val)
+		}
+		js, _ := json.Marshal(users)
 		res.WriteHeader(200)
-		res.Write(js)
+		res.Write([]byte(fmt.Sprintf(`{"status": "OK", "data": %s}`, js)))
 	} else {
-		res.WriteHeader(204)
+		res.WriteHeader(200)
+		res.Write([]byte(`{"status": "OK", "message": "No users found."}`))
 	}
 }

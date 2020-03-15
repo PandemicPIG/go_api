@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -9,21 +10,19 @@ func addUser(res http.ResponseWriter, req *http.Request) {
 	var newUser user
 	json.NewDecoder(req.Body).Decode(&newUser)
 
-	// check if email exists
-	var idx = len(data)
-	for i, user := range data {
-		if user.Email == newUser.Email {
-			idx = i
-			break
-		}
-	}
-
-	if idx == len(data) {
-		highestID++
-		newUser.UserID = highestID
-		data = append(data, newUser)
-		res.WriteHeader(201)
+	if newUser.Name == "" || newUser.Email == "" {
+		res.WriteHeader(400)
+		res.Write([]byte(`{"status": "BAD REQUEST", "message": "Missing name or email."}`))
+	} else if !checkEmail(newUser.Email) {
+		res.WriteHeader(400)
+		res.Write([]byte(`{"status": "BAD REQUEST", "message": "Invalid user email."}`))
 	} else {
-		res.WriteHeader(409)
+		UserIDchan := make(chan int)
+		wg.Add(1)
+		go dataS.AddUser(newUser, UserIDchan)
+		res.WriteHeader(201)
+		res.Write([]byte(fmt.Sprintf(`{"status": "CREATED", "userId": %d}`, <-UserIDchan)))
+		wg.Wait()
+		close(UserIDchan)
 	}
 }

@@ -10,26 +10,26 @@ func updateUser(res http.ResponseWriter, req *http.Request) {
 	json.NewDecoder(req.Body).Decode(&updatedUser)
 
 	// check if user exists
-	var idx = -1
-	for i, user := range data {
-		if user.UserID == updatedUser.UserID {
-			idx = i
-			break
-		}
-	}
+	userExists := dataS.CheckUserExists(updatedUser.UserID)
 
-	if idx != -1 {
-		// update user data
-		if updatedUser.Name != "" {
-			data[idx].Name = updatedUser.Name
+	if userExists {
+		if updatedUser.UserID == 0 {
+			res.WriteHeader(400)
+			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Missing of invalid user ID."}`))
+		} else if updatedUser.Email == "" && updatedUser.Name == "" {
+			res.WriteHeader(400)
+			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Missing user name and email."}`))
+		} else if updatedUser.Email != "" && !checkEmail(updatedUser.Email) {
+			res.WriteHeader(400)
+			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Invalid user email."}`))
+		} else {
+			// update user data
+			go dataS.EditUser(updatedUser)
+			res.WriteHeader(200)
+			res.Write([]byte(`{"status": "OK", "message": "User updated."}`))
 		}
-
-		if updatedUser.Email != "" {
-			data[idx].Email = updatedUser.Email
-		}
-
-		res.WriteHeader(204)
 	} else {
 		res.WriteHeader(404)
+		res.Write([]byte(`{"status": "NOT FOUND", "message": "No user found."}`))
 	}
 }
