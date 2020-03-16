@@ -19,6 +19,6 @@ func getUsers(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte(fmt.Sprintf(`{"status": "OK", "data": %s}`, js)))
 	} else {
 		res.WriteHeader(200)
-		res.Write([]byte(`{"status": "OK", "message": "No users found."}`))
+		res.Write([]byte(`{"status": "OK", "message": "No users found.", "data": []}`))
 	}
 }
