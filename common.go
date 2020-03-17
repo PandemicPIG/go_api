@@ -12,22 +12,20 @@ var wg sync.WaitGroup
 var dataS = newDataStore(
 	user{
 		UserID: 1,
-		Name:   "billy",
+		Name:   "Billy",
 		Email:  "billy@email.com",
 	},
 	user{
-		UserID: 2,
-		Name:   "james",
-		Email:  "james@email.com",
+		Name:  "James",
+		Email: "james@email.com",
+	},
+	user{
+		Name:  "David",
+		Email: "david@email.com",
 	},
 	user{
 		UserID: 3,
-		Name:   "david",
-		Email:  "david@email.com",
-	},
-	user{
-		UserID: 5,
-		Name:   "john",
+		Name:   "John",
 		Email:  "john@email.com",
 	},
 )
@@ -45,13 +43,21 @@ type dataStore struct {
 
 func newDataStore(params ...user) *dataStore {
 	var data = map[int]user{}
+	var noIDUsers = []user{}
 	var highestID int
 
 	if len(params) > 0 {
 		for _, val := range params {
-			data[val.UserID] = val
-			if val.UserID > highestID {
-				highestID = val.UserID
+			if val.UserID > 0 && val.Name != "" && val.Email != "" {
+				val.Email = strings.ToLower(val.Email)
+				data[val.UserID] = val
+				if val.UserID > highestID {
+					highestID = val.UserID
+				}
+			} else if val.Name != "" && val.Email != "" {
+				noIDUsers = append(noIDUsers, val)
+			} else {
+				log.Printf("\033[1;31m%s\033[0m %d %s %s", "ERROR: Fileds missing for:", val.UserID, val.Name, val.Email)
 			}
 		}
 	}
@@ -61,7 +67,17 @@ func newDataStore(params ...user) *dataStore {
 		highestID: highestID,
 	}
 
-	return newStore
+	return addNoIDUsers(noIDUsers, *newStore)
+}
+
+func addNoIDUsers(noIDUsers []user, newStore dataStore) *dataStore {
+	for _, val := range noIDUsers {
+		newStore.highestID++
+		val.UserID = newStore.highestID
+		val.Email = strings.ToLower(val.Email)
+		newStore.data[newStore.highestID] = val
+	}
+	return &newStore
 }
 
 func (dataS *dataStore) GetUserList() map[int]user {
