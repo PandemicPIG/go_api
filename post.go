@@ -22,7 +22,7 @@ func addUser(res http.ResponseWriter, req *http.Request) {
 	} else {
 		UserIDchan := make(chan int)
 		wg.Add(1)
-		go dataS.AddUser(newUser, UserIDchan)
+		go userS.AddUser(newUser, UserIDchan)
 		res.WriteHeader(201)
 		res.Write([]byte(fmt.Sprintf(`{"status": "CREATED", "userId": %d}`, <-UserIDchan)))
 		wg.Wait()

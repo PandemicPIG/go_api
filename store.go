@@ -11,12 +11,12 @@ type user struct {
 	Email  string `json:"email"`
 }
 
-type dataStore struct {
+type userStore struct {
 	data      map[int]user
 	highestID int
 }
 
-func newDataStore(params ...user) *dataStore {
+func newUserStore(params ...user) *userStore {
 	var data = map[int]user{}
 	var noIDUsers = []user{}
 	var highestID int
@@ -38,7 +38,7 @@ func newDataStore(params ...user) *dataStore {
 		}
 	}
 
-	var newStore = &dataStore{
+	var newStore = &userStore{
 		data:      data,
 		highestID: highestID,
 	}
@@ -48,7 +48,7 @@ func newDataStore(params ...user) *dataStore {
 	return newStore
 }
 
-func (store *dataStore) addNoIDUsers(noIDUsers []user) {
+func (store *userStore) addNoIDUsers(noIDUsers []user) {
 	for _, val := range noIDUsers {
 		UserIDchan := make(chan int)
 		wg.Add(1)
@@ -59,17 +59,17 @@ func (store *dataStore) addNoIDUsers(noIDUsers []user) {
 	}
 }
 
-func (store *dataStore) GetUserList() map[int]user {
+func (store *userStore) GetUserList() map[int]user {
 	log.Printf("LOG: retrieving user list")
 	return store.data
 }
 
-func (store *dataStore) CheckUserExists(userID int) bool {
+func (store *userStore) CheckUserExists(userID int) bool {
 	log.Printf("LOG: retrieving user")
 	return store.data[userID].UserID != 0
 }
 
-func (store *dataStore) AddUser(user user, UserIDchan chan int) {
+func (store *userStore) AddUser(user user, UserIDchan chan int) {
 	log.Printf("INFO: ading user")
 	defer wg.Done()
 
@@ -81,7 +81,7 @@ func (store *dataStore) AddUser(user user, UserIDchan chan int) {
 	UserIDchan <- user.UserID
 }
 
-func (store *dataStore) EditUser(updatedUser user) {
+func (store *userStore) EditUser(updatedUser user) {
 	log.Printf("INFO: editing user")
 	user := store.data[updatedUser.UserID]
 
@@ -96,7 +96,7 @@ func (store *dataStore) EditUser(updatedUser user) {
 	store.data[user.UserID] = user
 }
 
-func (store *dataStore) RemoveUser(userID int) {
+func (store *userStore) RemoveUser(userID int) {
 	log.Printf("INFO: removing user")
 	delete(store.data, userID)
 }

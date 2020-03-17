@@ -8,7 +8,7 @@ import (
 
 var wg sync.WaitGroup
 
-var dataS = newDataStore(
+var userS = newUserStore(
 	user{
 		UserID: 1,
 		Name:   "Billy",
@@ -37,7 +37,7 @@ func checkEmailValid(email string) bool {
 
 func checkEmailExists(email string) bool {
 	lowEmail := strings.ToLower(email)
-	for _, v := range dataS.data {
+	for _, v := range userS.data {
 		if v.Email == lowEmail {
 			return true
 		}

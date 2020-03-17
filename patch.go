@@ -10,7 +10,7 @@ func updateUser(res http.ResponseWriter, req *http.Request) {
 	json.NewDecoder(req.Body).Decode(&updatedUser)
 
 	// check if user exists
-	userExists := dataS.CheckUserExists(updatedUser.UserID)
+	userExists := userS.CheckUserExists(updatedUser.UserID)
 
 	if userExists {
 		if updatedUser.UserID == 0 {
@@ -27,7 +27,7 @@ func updateUser(res http.ResponseWriter, req *http.Request) {
 			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Email already exists."}`))
 		} else {
 			// update user data
-			go dataS.EditUser(updatedUser)
+			go userS.EditUser(updatedUser)
 			res.WriteHeader(200)
 			res.Write([]byte(`{"status": "OK", "message": "User updated."}`))
 		}

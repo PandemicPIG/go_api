@@ -10,10 +10,10 @@ func deleteUser(res http.ResponseWriter, req *http.Request) {
 	json.NewDecoder(req.Body).Decode(&user)
 
 	// check if user exists
-	userExists := dataS.CheckUserExists(user.UserID)
+	userExists := userS.CheckUserExists(user.UserID)
 
 	if userExists {
-		go dataS.RemoveUser(user.UserID)
+		go userS.RemoveUser(user.UserID)
 		res.WriteHeader(200)
 		res.Write([]byte(`{"status": "OK", "message": "User deleted."}`))
 	} else {
