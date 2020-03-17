@@ -33,7 +33,7 @@ func newUserStore(params ...user) *userStore {
 			} else if val.Name != "" && val.Email != "" {
 				noIDUsers = append(noIDUsers, val)
 			} else {
-				log.Printf("\033[1;31m%s\033[0m %d %s %s", "ERROR: Fileds missing for:", val.UserID, val.Name, val.Email)
+				log.Printf("ERROR: Fileds missing for: %d %s %s", val.UserID, val.Name, val.Email)
 			}
 		}
 	}
