@@ -19,9 +19,12 @@ func updateUser(res http.ResponseWriter, req *http.Request) {
 		} else if updatedUser.Email == "" && updatedUser.Name == "" {
 			res.WriteHeader(400)
 			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Missing user name and email."}`))
-		} else if updatedUser.Email != "" && !checkEmail(updatedUser.Email) {
+		} else if updatedUser.Email != "" && !checkEmailValid(updatedUser.Email) {
 			res.WriteHeader(400)
 			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Invalid user email."}`))
+		} else if checkEmailExists(updatedUser.Email) {
+			res.WriteHeader(400)
+			res.Write([]byte(`{"status": "BAD REQUEST", "message": "Email already exists."}`))
 		} else {
 			// update user data
 			go dataS.EditUser(updatedUser)

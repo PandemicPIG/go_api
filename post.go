@@ -13,9 +13,12 @@ func addUser(res http.ResponseWriter, req *http.Request) {
 	if newUser.Name == "" || newUser.Email == "" {
 		res.WriteHeader(400)
 		res.Write([]byte(`{"status": "BAD REQUEST", "message": "Missing name or email."}`))
-	} else if !checkEmail(newUser.Email) {
+	} else if !checkEmailValid(newUser.Email) {
 		res.WriteHeader(400)
 		res.Write([]byte(`{"status": "BAD REQUEST", "message": "Invalid user email."}`))
+	} else if checkEmailExists(newUser.Email) {
+		res.WriteHeader(400)
+		res.Write([]byte(`{"status": "BAD REQUEST", "message": "Email already exists."}`))
 	} else {
 		UserIDchan := make(chan int)
 		wg.Add(1)
